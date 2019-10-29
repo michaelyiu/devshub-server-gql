@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import gravatar from "gravatar";
 import { createToken } from "../connectors/jwt";
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated } from "./authorization";
@@ -7,6 +8,9 @@ const validateRegisterInput = require("./../validation/register");
 
 export default {
   Query: {
+    hello: () => {
+      return "Hello";
+    },
     users: combineResolvers(
       isAuthenticated,
       async (parent, args, { models, me }, info) => {
@@ -18,6 +22,7 @@ export default {
       isAuthenticated,
       async (parent, { email }, { models, me }, info) => {
         // auth check for every query and mutation except for the signup mutation
+        console.log("test")
         return models.User.findOne({ email });
       }
     )
@@ -29,19 +34,25 @@ export default {
       const { email, password, name } = args;
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const checkIfExists = await User.findOne({ email }).then();
+      const checkIfExists = await models.User.findOne({ email }).then();
 
-      console.log(checkIfExists);
 
       if (checkIfExists) throw new Error("User with that email already exists");
+      else {
+        const avatar = gravatar.url(req.body.email, {
+          s: '200',
+          r: 'pg',
+          d: 'mm'
+        });
+        const newUser = models.User.create({
+          email,
+          password: hashedPassword,
+          avatar,
+          name
+        });
+        return newUser;
+      }
 
-      const newUser = models.User.create({
-        email,
-        password: hashedPassword,
-        name
-      });
-
-      return newUser;
     },
 
     signIn: async (parent, args, { models, secret, me }, info) => {

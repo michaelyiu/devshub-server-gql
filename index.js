@@ -10,6 +10,7 @@ import config from "./config/keys";
 
 //validate jwt then set me in graphql server context
 const getMe = async (req, res, next) => {
+  // console.log(reqreq);
   let token = req.headers["authorization"];
   if (token) {
     try {
@@ -44,7 +45,7 @@ app.use(getMe);
 const db = require("./config/keys").mongoURI;
 
 mongoose
-  .connect(db, { useNewUrlParser: true, useFindAndModify: false })
+  .connect(db, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
