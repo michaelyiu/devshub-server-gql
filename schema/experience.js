@@ -31,6 +31,7 @@ export default gql`
   }
 
   type Experience {
+    id: ID!
     title: String!
     company: String!
     location: String

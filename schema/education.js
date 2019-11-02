@@ -31,6 +31,7 @@ export default gql`
   }
 
   type Education {
+    id: ID!
     school: String!
     degree: String!
     fieldOfStudy: String!
