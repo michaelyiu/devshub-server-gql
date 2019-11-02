@@ -6,8 +6,7 @@ export default {
     profile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        // const currentUser = models.User.findOne({ email: me.email });
-        return models.Profile.findOne({ user_id: me.id });
+        return await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) });
       }
     ),
     profiles: combineResolvers(

@@ -45,6 +45,7 @@ export default {
           d: 'mm'
         });
         const newUser = models.User.create({
+          id,
           email,
           password: hashedPassword,
           avatar,
@@ -58,10 +59,10 @@ export default {
     signIn: async (parent, args, { models, secret, me }, info) => {
       const { email, password } = args;
       const user = await models.User.findOne({ email });
-
       const token = await createToken(user, secret);
 
       return {
+
         email: user.email,
         token
       };

@@ -10,7 +10,6 @@ import config from "./config/keys";
 
 //validate jwt then set me in graphql server context
 const getMe = async (req, res, next) => {
-  // console.log(reqreq);
   let token = req.headers["authorization"];
   if (token) {
     try {

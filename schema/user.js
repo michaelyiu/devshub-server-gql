@@ -20,6 +20,7 @@ export default gql`
   }
 
   type Token {
+    id: String!
     name: String!
     email: String!
     token: String!
