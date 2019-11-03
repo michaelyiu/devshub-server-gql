@@ -7,7 +7,7 @@ export default {
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
         args.user_id = me.id;
-        const newEdu = {
+        const expAdd = {
           title: args.title,
           company: args.company,
           location: args.location,
@@ -17,13 +17,12 @@ export default {
           description: args.description
         };
 
-        models.Profile.findOne({ user_id: me.id }).then(profile => {
-          profile.experience.unshift(newEdu);
-
+        const newExp = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) }).then(profile => {
+          profile.experience.unshift(expAdd);
           profile.save();
+          return profile.experience[0];
         });
-
-        return newEdu;
+        return newExp;
       }
     ),
 
@@ -44,11 +43,11 @@ export default {
         if (args.description || args.description === "")
           expFields.description = args.description;
 
-        const profile = await models.Profile.findOne({ user_id: me.id });
+        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) });
         const index = profile.experience.map(item => item.id).indexOf(args.id);
 
         const newProfile = await models.Profile.findOneAndUpdate(
-          { user_id: me.id },
+          { user: require('mongodb').ObjectID(me.id) },
           { $set: { [`experience.${index}`]: expFields } },
           { new: true }
         )
@@ -68,7 +67,7 @@ export default {
       async (parent, args, { me, models }, info) => {
         args.user_id = me.id;
 
-        models.Profile.findOne({ user_id: me.id })
+        models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) })
           .then(profile => {
             const removeIndex = profile.experience
               .map(item => item.id)

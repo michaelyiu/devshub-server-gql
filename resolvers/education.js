@@ -2,13 +2,12 @@ import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasEducation } from "./authorization";
 
 export default {
-  Query: {},
   Mutation: {
     createEducation: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
         args.user_id = me.id;
-        const newEdu = {
+        const eduAdd = {
           school: args.school,
           degree: args.degree,
           fieldOfStudy: args.fieldOfStudy,
@@ -18,11 +17,11 @@ export default {
           description: args.description
         };
 
-        models.Profile.findOne({ user_id: me.id }).then(profile => {
-          profile.education.unshift(newEdu);
+        const newEdu = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) }).then(profile => {
+          profile.education.unshift(eduAdd);
           profile.save();
+          return profile.education[0];
         });
-
         return newEdu;
       }
     ),
@@ -47,7 +46,7 @@ export default {
         const index = profile.education.map(item => item.id).indexOf(args.id);
 
         const newProfile = await models.Profile.findOneAndUpdate(
-          { user_id: me.id },
+          { user: require('mongodb').ObjectID(me.id) },
           { $set: { [`education.${index}`]: eduFields } },
           { new: true }
         )
@@ -67,7 +66,7 @@ export default {
       async (parent, args, { me, models }, info) => {
         args.user_id = me.id;
 
-        models.Profile.findOne({ user_id: me.id })
+        models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) })
           .then(profile => {
             const removeIndex = profile.education
               .map(item => item.id)
