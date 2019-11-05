@@ -42,7 +42,7 @@ export default {
         if (args.description || args.description === "")
           eduFields.description = args.description;
 
-        const profile = await models.Profile.findOne({ user_id: me.id });
+        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) });
         const index = profile.education.map(item => item.id).indexOf(args.id);
 
         const newProfile = await models.Profile.findOneAndUpdate(
