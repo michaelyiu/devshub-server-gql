@@ -1,12 +1,21 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasExperience } from "./authorization";
+import { UserInputError } from "apollo-server-core";
+
+const validateExperienceInput = require('./../validation/experience');
 
 export default {
   Mutation: {
     createExperience: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        const { errors, isValid } = validateExperienceInput(args);
+
+        if (!isValid) {
+          throw new UserInputError("Some required fields should not be empty!", { errors })
+        }
+
+        args.user_id = me._id;
         const expAdd = {
           title: args.title,
           company: args.company,
@@ -17,7 +26,7 @@ export default {
           description: args.description
         };
 
-        const newExp = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) }).then(profile => {
+        const newExp = await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) }).then(profile => {
           profile.experience.unshift(expAdd);
           profile.save();
           return profile.experience[0];
@@ -29,7 +38,13 @@ export default {
     editExperience: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        const { errors, isValid } = validateExperienceInput(args);
+
+        if (!isValid) {
+          throw new UserInputError("Some required fields should not be empty!", { errors })
+        }
+
+        args.user_id = me._id;
 
         const expFields = {};
         if (args.title || args.title === "") expFields.title = args.title;
@@ -43,11 +58,11 @@ export default {
         if (args.description || args.description === "")
           expFields.description = args.description;
 
-        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) });
+        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) });
         const index = profile.experience.map(item => item.id).indexOf(args.id);
 
         const newProfile = await models.Profile.findOneAndUpdate(
-          { user: require('mongodb').ObjectID(me.id) },
+          { user: require('mongodb').ObjectID(me._id) },
           { $set: { [`experience.${index}`]: expFields } },
           { new: true }
         )
@@ -65,9 +80,9 @@ export default {
       isAuthenticated,
 
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        args.user_id = me._id;
 
-        models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) })
+        models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) })
           .then(profile => {
             const removeIndex = profile.experience
               .map(item => item.id)

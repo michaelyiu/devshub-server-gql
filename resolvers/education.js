@@ -1,12 +1,21 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasEducation } from "./authorization";
+import { UserInputError } from "apollo-server-core";
+
+const validateEducationInput = require('./../validation/education');
 
 export default {
   Mutation: {
     createEducation: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        const { errors, isValid } = validateEducationInput(args);
+
+        if (!isValid) {
+          throw new UserInputError("Some required fields should not be empty!", { errors })
+        }
+
+        args.user_id = me._id;
         const eduAdd = {
           school: args.school,
           degree: args.degree,
@@ -17,7 +26,7 @@ export default {
           description: args.description
         };
 
-        const newEdu = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) }).then(profile => {
+        const newEdu = await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) }).then(profile => {
           profile.education.unshift(eduAdd);
           profile.save();
           return profile.education[0];
@@ -29,7 +38,13 @@ export default {
     editEducation: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        const { errors, isValid } = validateEducationInput(args);
+
+        if (!isValid) {
+          throw new UserInputError("Some required fields should not be empty!", { errors })
+        }
+
+        args.user_id = me._id;
 
         const eduFields = {};
         if (args.school || args.school === "") eduFields.school = args.school;
@@ -42,11 +57,11 @@ export default {
         if (args.description || args.description === "")
           eduFields.description = args.description;
 
-        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) });
+        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) });
         const index = profile.education.map(item => item.id).indexOf(args.id);
 
         const newProfile = await models.Profile.findOneAndUpdate(
-          { user: require('mongodb').ObjectID(me.id) },
+          { user: require('mongodb').ObjectID(me._id) },
           { $set: { [`education.${index}`]: eduFields } },
           { new: true }
         )
@@ -64,9 +79,9 @@ export default {
       isAuthenticated,
 
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        args.user_id = me._id;
 
-        models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) })
+        models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) })
           .then(profile => {
             const removeIndex = profile.education
               .map(item => item.id)

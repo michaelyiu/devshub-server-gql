@@ -21,10 +21,10 @@ export default {
           text: args.text,
           name: args.name,
           avatar: args.avatar,
-          user: me.id
+          user: me._id
         };
 
-        await models.Profile.findOne({ user_id: me.id }).then(profile => {
+        await models.Profile.findOne({ user_id: me._id }).then(profile => {
           newComment.handle = profile.handle;
           post.comments.unshift(newComment);
           post.save();
@@ -45,7 +45,6 @@ export default {
         ) {
           return new Error("Comment does not exist");
         }
-        console.log("test");
         const removeIndex = post.comments
           .map(item => item._id.toString())
           .indexOf(args.comment_id);

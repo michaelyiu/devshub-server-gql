@@ -6,7 +6,7 @@ export default {
     profile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        return await models.Profile.findOne({ user: require('mongodb').ObjectID(me.id) });
+        return await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) });
       }
     ),
     profiles: combineResolvers(
@@ -20,7 +20,7 @@ export default {
     updateProfile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        args.user_id = me.id;
+        args.user_id = me._id;
 
         //Get fields
         const profileFields = {};
@@ -40,12 +40,12 @@ export default {
           profileFields.skills = args.skills.split(",");
         }
 
-        const profile = await models.Profile.findOne({ user_id: me.id });
+        const profile = await models.Profile.findOne({ user_id: me._id });
         let updatedProfile;
 
         if (profile) {
           updatedProfile = await models.Profile.findOneAndUpdate(
-            { user_id: me.id },
+            { user_id: me._id },
             { $set: profileFields },
             { new: true }
           ).then(profile => {

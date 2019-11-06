@@ -24,7 +24,6 @@ export default {
       isAuthenticated,
       async (parent, { email }, { models, me }, info) => {
         // auth check for every query and mutation except for the signup mutation
-        console.log("test")
         return models.User.findOne({ email });
       }
     )
@@ -74,6 +73,7 @@ export default {
           errors.email = "User not found";
           throw new UserInputError("Login failed!", { errors });
         }
+        return user;
       });
       const token = await createToken(user, secret);
       return {
