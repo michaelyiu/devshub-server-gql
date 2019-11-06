@@ -33,19 +33,18 @@ export default {
 
       const { email, password, name } = args;
       const hashedPassword = await bcrypt.hash(password, 10);
-
       const checkIfExists = await models.User.findOne({ email }).then();
 
 
       if (checkIfExists) throw new Error("User with that email already exists");
       else {
-        const avatar = gravatar.url(req.body.email, {
+        const avatar = gravatar.url(email, {
           s: '200',
           r: 'pg',
           d: 'mm'
         });
         const newUser = models.User.create({
-          id,
+          // id,
           email,
           password: hashedPassword,
           avatar,
