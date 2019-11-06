@@ -78,7 +78,6 @@ export default {
             profile.save().then(profile => {
               return profile;
             });
-
           })
           .catch(err => {
             throw new Error(err);

@@ -77,12 +77,11 @@ export default {
             profile.save().then(profile => {
               return profile;
             });
-            console.log(profile.education);
           })
           .catch(err => {
             throw new Error(err);
           });
-        return true;
+        return args.id;
       }
     )
   }
