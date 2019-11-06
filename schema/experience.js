@@ -27,7 +27,7 @@ export default gql`
       description: String
     ): Experience
 
-    deleteExperience(id: ID!): Boolean
+    deleteExperience(id: ID!): ID
   }
 
   type Experience {

@@ -27,7 +27,7 @@ export default gql`
       description: String
     ): Education
 
-    deleteEducation(id: ID!): Boolean
+    deleteEducation(id: ID!): ID
   }
 
   type Education {
