@@ -3,8 +3,10 @@ import gravatar from "gravatar";
 import { createToken } from "../connectors/jwt";
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated } from "./authorization";
+import { UserInputError } from "apollo-server-core";
 
 const validateRegisterInput = require("./../validation/register");
+const validateLoginInput = require('./../validation/login');
 
 export default {
   Query: {
@@ -30,13 +32,18 @@ export default {
   Mutation: {
     signUp: async (parent, args, { models }, info) => {
       const { errors, isValid } = validateRegisterInput(args);
+      if (!isValid) {
+        throw new UserInputError("Login failed!", { errors });
+      }
 
       const { email, password, name } = args;
       const hashedPassword = await bcrypt.hash(password, 10);
       const checkIfExists = await models.User.findOne({ email }).then();
 
-
-      if (checkIfExists) throw new Error("User with that email already exists");
+      if (checkIfExists) {
+        errors.email = "User with that email already exists"
+        throw new UserInputError("Sign up failed!", { errors });
+      }
       else {
         const avatar = gravatar.url(email, {
           s: '200',
@@ -56,12 +63,20 @@ export default {
     },
 
     signIn: async (parent, args, { models, secret, me }, info) => {
-      const { email, password } = args;
-      const user = await models.User.findOne({ email });
+      const { errors, isValid } = validateLoginInput(args);
+      if (!isValid) {
+        throw new UserInputError("Login failed!", { errors });
+      }
+
+      const { email } = args;
+      const user = await models.User.findOne({ email }).then(user => {
+        if (!user) {
+          errors.email = "User not found";
+          throw new UserInputError("Login failed!", { errors });
+        }
+      });
       const token = await createToken(user, secret);
-
       return {
-
         email: user.email,
         token
       };
