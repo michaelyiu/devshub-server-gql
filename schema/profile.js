@@ -13,6 +13,7 @@ export default gql`
       website: String
       location: String
       status: String
+      skills: String!
       bio: String
       githubUsername: String
     ): Profile
@@ -24,8 +25,8 @@ export default gql`
     company: String
     website: String
     location: String
-    status: String!
-    skills: [String]
+    status: String
+    skills: [String]!
     bio: String
     githubUsername: String
     experience: [Experience]

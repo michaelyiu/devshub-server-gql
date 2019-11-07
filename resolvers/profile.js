@@ -1,6 +1,10 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasProfile } from "./authorization";
 
+import { UserInputError } from "apollo-server-core";
+
+const validateProfileInput = require('./../validation/profile');
+
 export default {
   Query: {
     profile: combineResolvers(
@@ -20,10 +24,16 @@ export default {
     updateProfile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        args.user_id = me._id;
+        const { errors, isValid } = validateProfileInput(args);
+
+        if (!isValid) {
+          throw new UserInputError("Some required fields should not be empty!", { errors })
+        }
+
 
         //Get fields
         const profileFields = {};
+        profileFields.user_id = me._id;
         if (args.handle) profileFields.handle = args.handle;
         if (args.company || args.company === "")
           profileFields.company = args.company;
@@ -40,30 +50,29 @@ export default {
           profileFields.skills = args.skills.split(",");
         }
 
-        const profile = await models.Profile.findOne({ user_id: me._id });
-        let updatedProfile;
+        const updatedProfile = models.Profile.findOne({ user_id: me._id })
+          .then(profile => {
+            if (profile) {
+              models.Profile.findOneAndUpdate(
+                { user_id: me._id }, { $set: profileFields }, { new: true }
+              ).then(profile);
+            } else {
+              //Create
+              console.log("profile creation hit")
 
-        if (profile) {
-          updatedProfile = await models.Profile.findOneAndUpdate(
-            { user_id: me._id },
-            { $set: profileFields },
-            { new: true }
-          ).then(profile => {
+              //Check if handle exists
+              models.Profile.findOne({ handle: profileFields.handle }).then(profile => {
+                if (profile) {
+                  errors.handle = "ERROR~~";
+                  throw new UserInputError("Handle already exists");
+                }
+                //save profile
+                return models.Profile(profileFields).save().then(profile)
+              })
+            }
             return profile;
-          });
-
-          return updatedProfile;
-        } else {
-          const handleCheck = await models.Profile.findOne({
-            handle: profileFields.handle
-          });
-
-          if (!handleCheck) {
-            throw new Error("Handle already exists");
-          }
-
-          return await models.Profile.create(profileFields);
-        }
+          })
+        return updatedProfile;
       }
     )
   }
