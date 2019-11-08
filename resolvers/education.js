@@ -26,7 +26,7 @@ export default {
           description: args.description
         };
 
-        const newEdu = await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) }).then(profile => {
+        const newEdu = await models.Profile.findOne({ user: me.id }).then(profile => {
           profile.education.unshift(eduAdd);
           profile.save();
           return profile.education[0];
@@ -57,11 +57,11 @@ export default {
         if (args.description || args.description === "")
           eduFields.description = args.description;
 
-        const profile = await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) });
+        const profile = await models.Profile.findOne({ user: me.id });
         const index = profile.education.map(item => item.id).indexOf(args.id);
 
         const newProfile = await models.Profile.findOneAndUpdate(
-          { user: require('mongodb').ObjectID(me._id) },
+          { user: me.id },
           { $set: { [`education.${index}`]: eduFields } },
           { new: true }
         )
@@ -81,7 +81,7 @@ export default {
       async (parent, args, { me, models }, info) => {
         args.user_id = me._id;
 
-        models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) })
+        models.Profile.findOne({ user: me.id })
           .then(profile => {
             const removeIndex = profile.education
               .map(item => item.id)
