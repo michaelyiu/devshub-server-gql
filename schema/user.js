@@ -29,9 +29,10 @@ export default gql`
   type User {
     name: String!
     email: String!
-    password: String!
-    password2: String!
+    # password: String!
+    # password2: String!
     avatar: String
     date: String
+    profile: Profile
   }
 `;

@@ -10,7 +10,8 @@ export default {
     profile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        return await models.Profile.findOne({ user: require('mongodb').ObjectID(me._id) });
+        console.log(me)
+        return await models.Profile.findOne({ user: me.id });
       }
     ),
     profiles: combineResolvers(
@@ -73,5 +74,10 @@ export default {
         return updatedProfile;
       }
     )
+  },
+  Profile: {
+    user: async (profile, args, { models }) => {
+      return await models.User.findOne({ _id: profile.user })
+    }
   }
 };

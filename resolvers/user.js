@@ -3,7 +3,7 @@ import gravatar from "gravatar";
 import { createToken } from "../connectors/jwt";
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated } from "./authorization";
-import { UserInputError } from "apollo-server-core";
+import { AuthenticationError, UserInputError } from "apollo-server-core";
 
 const validateRegisterInput = require("./../validation/register");
 const validateLoginInput = require('./../validation/login');
@@ -68,11 +68,18 @@ export default {
       }
 
       const { email } = args;
-      const user = await models.User.findOne({ email }).then(user => {
+      const user = await models.User.findOne({ email }).then(async user => {
         if (!user) {
           errors.email = "User not found";
           throw new UserInputError("Login failed!", { errors });
         }
+
+        const passwordIsValid = await bcrypt.compare(args.password, user.password);
+
+        if (!passwordIsValid) {
+          throw new AuthenticationError("Invalid login/password!")
+        }
+
         return user;
       });
       const token = await createToken(user, secret);
@@ -80,6 +87,11 @@ export default {
         email: user.email,
         token
       };
+    }
+  },
+  User: {
+    profile: async (user, args, { models }) => {
+      return await models.Profile.findOne({ user: user.id })
     }
   }
 };
