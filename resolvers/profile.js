@@ -33,7 +33,7 @@ export default {
 
         //Get fields
         const profileFields = {};
-        profileFields.user_id = me._id;
+        profileFields.user = me._id;
         if (args.handle) profileFields.handle = args.handle;
         if (args.company || args.company === "")
           profileFields.company = args.company;
@@ -50,27 +50,25 @@ export default {
           profileFields.skills = args.skills.split(",");
         }
 
-        const updatedProfile = models.Profile.findOne({ user_id: me._id })
-          .then(profile => {
+        const updatedProfile = models.Profile.findOne({ user: me._id })
+          .then(async profile => {
             if (profile) {
               models.Profile.findOneAndUpdate(
-                { user_id: me._id }, { $set: profileFields }, { new: true }
+                { user: me._id }, { $set: profileFields }, { new: true }
               ).then(profile);
             } else {
               //Create
-              console.log("profile creation hit")
 
               //Check if handle exists
-              models.Profile.findOne({ handle: profileFields.handle }).then(profile => {
+              return await models.Profile.findOne({ handle: profileFields.handle }).then(async profile => {
                 if (profile) {
                   errors.handle = "ERROR~~";
                   throw new UserInputError("Handle already exists");
                 }
                 //save profile
-                return models.Profile(profileFields).save().then(profile)
+                return await models.Profile(profileFields).save().then(profile)
               })
             }
-            return profile;
           })
         return updatedProfile;
       }
