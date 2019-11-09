@@ -17,6 +17,8 @@ export default gql`
       bio: String
       githubUsername: String
     ): Profile
+    
+    deleteProfile: Boolean
   }
 
   type Profile {

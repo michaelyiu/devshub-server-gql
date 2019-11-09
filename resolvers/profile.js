@@ -51,14 +51,12 @@ export default {
         }
         const updatedProfile = await models.Profile.findOne({ user: me.id })
           .then(async profile => {
-
             if (profile) {
               return await models.Profile.findOneAndUpdate(
                 { user: me.id },
                 { $set: profileFields },
                 { new: true }
               ).then(profile);
-
             } else {
               //Create
 
@@ -73,8 +71,18 @@ export default {
               })
             }
           })
-        console.log(updatedProfile)
         return updatedProfile;
+      }
+    ),
+    deleteProfile: combineResolvers(
+      isAuthenticated,
+      async (parent, args, { me, models }, info) => {
+        models.Profile.findOneAndRemove({ user: me.id }).then(() => {
+          models.User.findOneAndRemove({ _id: me.id }).then(() => true)
+        }).catch(err => {
+          throw new Error("No profile found");
+        })
+        return true;
       }
     )
   },
