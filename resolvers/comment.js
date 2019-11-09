@@ -21,10 +21,10 @@ export default {
           text: args.text,
           name: args.name,
           avatar: args.avatar,
-          user: me._id
+          user: me.id
         };
 
-        await models.Profile.findOne({ user_id: me._id }).then(profile => {
+        await models.Profile.findOne({ user_id: me.id }).then(profile => {
           newComment.handle = profile.handle;
           post.comments.unshift(newComment);
           post.save();

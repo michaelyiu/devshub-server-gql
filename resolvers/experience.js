@@ -15,7 +15,7 @@ export default {
           throw new UserInputError("Some required fields should not be empty!", { errors })
         }
 
-        args.user_id = me._id;
+        args.user_id = me.id;
         const expAdd = {
           title: args.title,
           company: args.company,
@@ -44,7 +44,7 @@ export default {
           throw new UserInputError("Some required fields should not be empty!", { errors })
         }
 
-        args.user_id = me._id;
+        args.user_id = me.id;
 
         const expFields = {};
         if (args.title || args.title === "") expFields.title = args.title;
@@ -80,7 +80,7 @@ export default {
       isAuthenticated,
 
       async (parent, args, { me, models }, info) => {
-        args.user_id = me._id;
+        args.user_id = me.id;
 
         models.Profile.findOne({ user: me.id })
           .then(profile => {

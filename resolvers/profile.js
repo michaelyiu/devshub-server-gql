@@ -10,7 +10,6 @@ export default {
     profile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        console.log(me)
         return await models.Profile.findOne({ user: me.id });
       }
     ),
@@ -34,7 +33,7 @@ export default {
 
         //Get fields
         const profileFields = {};
-        profileFields.user = me._id;
+        profileFields.user = me.id;
         if (args.handle) profileFields.handle = args.handle;
         if (args.company || args.company === "")
           profileFields.company = args.company;
@@ -50,13 +49,16 @@ export default {
         if (typeof args.skills !== "undefined") {
           profileFields.skills = args.skills.split(",");
         }
-
-        const updatedProfile = models.Profile.findOne({ user: me._id })
+        const updatedProfile = await models.Profile.findOne({ user: me.id })
           .then(async profile => {
+
             if (profile) {
-              models.Profile.findOneAndUpdate(
-                { user: me._id }, { $set: profileFields }, { new: true }
+              return await models.Profile.findOneAndUpdate(
+                { user: me.id },
+                { $set: profileFields },
+                { new: true }
               ).then(profile);
+
             } else {
               //Create
 
@@ -71,6 +73,7 @@ export default {
               })
             }
           })
+        console.log(updatedProfile)
         return updatedProfile;
       }
     )

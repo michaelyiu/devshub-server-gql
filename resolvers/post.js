@@ -17,13 +17,13 @@ export default {
       async (parent, args, { me, models }, info) => {
         const { text, name, avatar, user, handle } = args;
 
-        const profile = await models.Profile.findOne({ user_id: me._id });
+        const profile = await models.Profile.findOne({ user_id: me.id });
 
         const newPost = await models.Post.create({
           text,
           name,
           avatar,
-          user: me._id,
+          user: me.id,
           handle: profile.handle
         });
         return newPost;
@@ -34,7 +34,7 @@ export default {
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
         const post = await models.Post.findById(args.id);
-        if (post.user.toString() !== me._id) {
+        if (post.user.toString() !== me.id) {
           throw new Error("User not authorized");
         }
 

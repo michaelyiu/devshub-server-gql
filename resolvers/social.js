@@ -7,7 +7,7 @@ export default {
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
         const updatedProfile = await models.Profile.findOneAndUpdate(
-          { user_id: me._id },
+          { user_id: me.id },
           {
             social: args
           }

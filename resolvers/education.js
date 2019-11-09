@@ -15,7 +15,7 @@ export default {
           throw new UserInputError("Some required fields should not be empty!", { errors })
         }
 
-        args.user_id = me._id;
+        args.user_id = me.id;
         const eduAdd = {
           school: args.school,
           degree: args.degree,
@@ -44,7 +44,7 @@ export default {
           throw new UserInputError("Some required fields should not be empty!", { errors })
         }
 
-        args.user_id = me._id;
+        args.user_id = me.id;
 
         const eduFields = {};
         if (args.school || args.school === "") eduFields.school = args.school;
@@ -79,7 +79,7 @@ export default {
       isAuthenticated,
 
       async (parent, args, { me, models }, info) => {
-        args.user_id = me._id;
+        args.user_id = me.id;
 
         models.Profile.findOne({ user: me.id })
           .then(profile => {
