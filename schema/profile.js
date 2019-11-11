@@ -4,6 +4,7 @@ export default gql`
   extend type Query {
     profile(email: String): Profile
     profiles: [Profile]
+    profileByHandle(handle: String!): Profile
   }
 
   extend type Mutation {
@@ -17,7 +18,7 @@ export default gql`
       bio: String
       githubUsername: String
     ): Profile
-    
+
     deleteProfile: Boolean
   }
 

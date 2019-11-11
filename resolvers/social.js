@@ -7,13 +7,13 @@ export default {
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
         const updatedProfile = await models.Profile.findOneAndUpdate(
-          { user_id: me.id },
+          { user: me.id },
           {
-            social: args
-          }
-        ).then(profile => {
-          return profile;
-        });
+            $set: { social: args }
+          },
+          { new: true }
+
+        ).then(profile => profile);
         return updatedProfile.social;
       }
     )

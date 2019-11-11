@@ -18,6 +18,20 @@ export default {
       async (parent, args, { me, models }, info) => {
         return models.Profile.find({});
       }
+    ),
+    profileByHandle: combineResolvers(
+      isAuthenticated,
+      async (parent, args, { me, models }, info) => {
+        return models.Profile.findOne({ handle: args.handle }).populate('user', ['name', 'avatar']).then(profile => {
+          if (!profile) {
+            throw new Error("There is no profile for this user");
+          }
+          return profile;
+        })
+          .catch(err => {
+            throw new Error("")
+          });
+      }
     )
   },
   Mutation: {
