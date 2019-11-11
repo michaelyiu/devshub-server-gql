@@ -14,13 +14,11 @@ export default {
       }
     ),
     profiles: combineResolvers(
-      isAuthenticated,
       async (parent, args, { me, models }, info) => {
         return models.Profile.find({});
       }
     ),
     profileByHandle: combineResolvers(
-      isAuthenticated,
       async (parent, args, { me, models }, info) => {
         return models.Profile.findOne({ handle: args.handle }).populate('user', ['name', 'avatar']).then(profile => {
           if (!profile) {
