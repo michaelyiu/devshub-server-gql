@@ -41,5 +41,11 @@ export default {
         return true;
       }
     )
-  }
+  },
+  // Like: {
+  //   user: async (like, args, { models }) => {
+  //     console.log(like);
+  //     return await models.User.findOne({ _id: like.user })
+  //   }
+  // }
 };

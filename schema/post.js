@@ -19,12 +19,11 @@ export default gql`
 
   type Post {
     id: ID!
-    user: User
     text: String!
     name: String
     handle: String
     avatar: String
-    likes: [User]
+    likes: [Like]
     comments: [Comment]
   }
 `;

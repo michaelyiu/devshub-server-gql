@@ -7,6 +7,7 @@ export default gql`
   }
 
   type Like {
-    post_id: String!
+    id: ID!
+    user: String
   }
 `;

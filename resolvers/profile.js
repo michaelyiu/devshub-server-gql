@@ -19,7 +19,7 @@ export default {
       }
     ),
     profileByHandle: combineResolvers(
-      async (parent, args, { me, models }, info) => {
+      async (parent, args, { models }, info) => {
         return models.Profile.findOne({ handle: args.handle }).populate('user', ['name', 'avatar']).then(profile => {
           if (!profile) {
             throw new Error("There is no profile for this user");

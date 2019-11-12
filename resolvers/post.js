@@ -4,6 +4,8 @@ import { isAuthenticated, hasPost } from "./authorization";
 export default {
   Query: {
     posts: async (parent, args, { models }, info) => {
+      // 1. getPosts
+      // 2. getUser of each post
       return models.Post.find().sort({ date: -1 });
     },
     post: async (parent, args, { models }, info) => {
