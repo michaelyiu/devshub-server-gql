@@ -16,7 +16,7 @@ export default {
         }
         post.likes.unshift({ user: me.id });
         post.save().then(post);
-        return true;
+        return post.likes[0];
       }
     ),
     removeLike: combineResolvers(
@@ -35,17 +35,11 @@ export default {
           .map(item => item.user.toString())
           .indexOf(me.id);
 
-        post.likes.splice(removeIndex, 1);
+        const removedLike = post.likes.splice(removeIndex, 1);
 
         post.save().then(post);
-        return true;
+        return removedLike[0];
       }
     )
-  },
-  // Like: {
-  //   user: async (like, args, { models }) => {
-  //     console.log(like);
-  //     return await models.User.findOne({ _id: like.user })
-  //   }
-  // }
+  }
 };
