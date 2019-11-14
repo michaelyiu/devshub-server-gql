@@ -17,10 +17,10 @@ export default {
     createPost: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
-        const { text, name, avatar, user, handle } = args;
+        //send avatar from frontend
+        const { text, name, avatar } = args;
 
-        const profile = await models.Profile.findOne({ user_id: me.id });
-
+        const profile = await models.Profile.findOne({ user: me.id });
         const newPost = await models.Post.create({
           text,
           name,
@@ -50,7 +50,5 @@ export default {
         return true;
       }
     )
-    // editPost: async (parent, args, ctx, info) => {},
-    // deletePost: async (parent, args, ctx, info) => {}
   }
 };

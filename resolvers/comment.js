@@ -24,7 +24,7 @@ export default {
           user: me.id
         };
 
-        await models.Profile.findOne({ user_id: me.id }).then(profile => {
+        await models.Profile.findOne({ user: me.id }).then(profile => {
           newComment.handle = profile.handle;
           post.comments.unshift(newComment);
           post.save();

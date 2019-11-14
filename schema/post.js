@@ -25,5 +25,6 @@ export default gql`
     avatar: String
     likes: [Like]
     comments: [Comment]
+    user: String
   }
 `;
