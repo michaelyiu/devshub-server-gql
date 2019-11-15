@@ -18,11 +18,12 @@ export default gql`
   }
 
   type Comment {
-    # user: User
+    id: ID!
     text: String!
     name: String
     handle: String
     avatar: String
     date: String
+    user: String
   }
 `;

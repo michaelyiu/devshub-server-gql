@@ -2,32 +2,32 @@ import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasProfile } from "./authorization";
 
 export default {
-  // Query: {
-  //   comments: combineResolvers(
-  //     isAuthenticated,
-  //     async (parent, args, { me, models }, info) => {
-  //       const post = await models.Post.findById(args.post_id);
-  //       return;
-  //     }
-  //   )
-  // },
+  Query: {
+    comments: combineResolvers(
+      async (parent, args, { me, models }, info) => {
+        const post = await models.Post.findById(args.post_id);
+        return;
+      }
+    )
+  },
   Mutation: {
     createComment: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
+        //name and avatar can come from the front end.....
         const post = await models.Post.findById(args.post_id);
-
-        const newComment = {
+        const commentToAdd = {
           text: args.text,
           name: args.name,
           avatar: args.avatar,
-          user: me.id
+          user: me.id,
         };
 
-        await models.Profile.findOne({ user: me.id }).then(profile => {
-          newComment.handle = profile.handle;
-          post.comments.unshift(newComment);
+        const newComment = await models.Profile.findOne({ user: me.id }).then(profile => {
+          commentToAdd.handle = profile.handle;
           post.save();
+          post.comments.unshift(commentToAdd);
+          return post.comments[0];
         });
 
         return newComment;
