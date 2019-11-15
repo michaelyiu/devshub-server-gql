@@ -2,9 +2,9 @@
   "name": "devshub-server-gql",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "graphql.js",
   "scripts": {
-    "start": "nodemon --exec babel-node index.js",
+    "start": "nodemon --exec babel-node ./src/graphql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
