@@ -31,15 +31,15 @@ const server = new ApolloServer({
     return {
       models,
       me: user,
-      secret: config.secret
+      secret: config.SECRET
     };
   }
 });
 
 //connect mongo db
-console.log(require("../config/keys").mongoURI);
-console.log(require("../config/keys").secret);
-const db = require("../config/keys").mongoURI;
+console.log(require("../config/keys").MONGO_URI);
+console.log(require("../config/keys").SECRET);
+const db = require("../config/keys").MONGO_URI;
 
 
 mongoose
