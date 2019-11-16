@@ -3,4 +3,7 @@ import Profile from "./Profile";
 import Post from "./Post";
 
 //models for mongodb
-module.exports = { User, Profile, Post };
+// module.exports = { User, Profile, Post };
+export default {
+	User, Profile, Post
+}

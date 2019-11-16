@@ -16,6 +16,8 @@ export default {
     users: combineResolvers(
       isAuthenticated,
       async (parent, args, { models, me }, info) => {
+        console.log(models)
+        // console.log("HUGE ME", me);
         // auth check for every query and mutation except for the signup mutation
         return models.User.find({});
       }
