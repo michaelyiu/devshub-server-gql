@@ -43,7 +43,7 @@ const db = require("../config/keys").MONGO_URI;
 
 
 mongoose
-  .connect(db, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
+  .connect("mongodb://myiu:mikeyiu1@ds143573.mlab.com:43573/devshub", { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
