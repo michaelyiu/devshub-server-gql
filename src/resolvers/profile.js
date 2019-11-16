@@ -7,15 +7,15 @@ const validateProfileInput = require('./../validation/profile');
 
 export default {
   Query: {
+    profiles: combineResolvers(
+      async (parent, args, { me, models }, info) => {
+        return models.Profile.find({}).sort({ date: -1 });
+      }
+    ),
     profile: combineResolvers(
       isAuthenticated,
       async (parent, args, { me, models }, info) => {
         return await models.Profile.findOne({ user: me.id });
-      }
-    ),
-    profiles: combineResolvers(
-      async (parent, args, { me, models }, info) => {
-        return models.Profile.find({});
       }
     ),
     profileByHandle: combineResolvers(

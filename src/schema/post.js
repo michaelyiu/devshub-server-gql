@@ -26,5 +26,6 @@ export default gql`
     likes: [Like]
     comments: [Comment]
     user: String
+    date: Date
   }
 `;

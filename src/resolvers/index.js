@@ -1,3 +1,5 @@
+import { GraphQLDateTime } from "graphql-iso-date";
+
 import userResolvers from "./user";
 import postResolvers from "./post";
 import profileResolvers from "./profile";
@@ -7,7 +9,12 @@ import socialResolvers from "./social";
 import commentResolvers from "./comment";
 import likeResolvers from "./like";
 
+const customScalarResolver = {
+  Date: GraphQLDateTime,
+};
+
 export default [
+  customScalarResolver,
   userResolvers,
   postResolvers,
   profileResolvers,

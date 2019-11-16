@@ -35,5 +35,6 @@ export default gql`
     experience: [Experience]
     education: [Education]
     social: Social
+    date: Date
   }
 `;
