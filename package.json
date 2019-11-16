@@ -8,7 +8,7 @@
     "start": "nodemon --exec babel-node src/lambda/graphql.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:lambda": "netlify-lambda serve src/lambda",
-    "build:lambda": "netlify-lambda build src/lambda"
+    "build:lambda": "netlify-lambda build src/lambda && node -p 'process.env'"
   },
   "author": "",
   "license": "ISC",
