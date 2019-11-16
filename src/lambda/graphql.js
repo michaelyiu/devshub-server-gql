@@ -36,7 +36,7 @@ const server = new ApolloServer({
   }
 });
 
-//connect mongo db
+//connect mongo dbs
 console.log(require("../config/keys").MONGO_URI);
 console.log(require("../config/keys").SECRET);
 const db = require("../config/keys").MONGO_URI;
