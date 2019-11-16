@@ -11,7 +11,7 @@ import config from "../config/keys";
 const getMe = async (token) => {
   if (token) {
     try {
-      const user = await jwt.verify(token, config.secret, {
+      const user = await jwt.verify(token, config.SECRET, {
         algorithm: ["HS256"]
       })
       return user;
