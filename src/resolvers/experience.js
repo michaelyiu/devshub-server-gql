@@ -1,6 +1,6 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasExperience } from "./authorization";
-import { UserInputError } from "apollo-server-core";
+import { UserInputError } from "apollo-server-lambda";
 
 const validateExperienceInput = require('./../validation/experience');
 

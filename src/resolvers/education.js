@@ -1,6 +1,6 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasEducation } from "./authorization";
-import { UserInputError } from "apollo-server-core";
+import { UserInputError } from "apollo-server-lambda";
 
 const validateEducationInput = require('./../validation/education');
 

@@ -3,7 +3,7 @@ import gravatar from "gravatar";
 import { createToken } from "../connectors/jwt";
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated } from "./authorization";
-import { AuthenticationError, UserInputError } from "apollo-server-core";
+import { AuthenticationError, UserInputError } from "apollo-server-lambda";
 
 const validateRegisterInput = require("./../validation/register");
 const validateLoginInput = require('./../validation/login');

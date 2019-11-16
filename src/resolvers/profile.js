@@ -1,7 +1,7 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAuthenticated, hasProfile } from "./authorization";
 
-import { UserInputError } from "apollo-server-core";
+import { UserInputError } from "apollo-server-lambda";
 
 const validateProfileInput = require('./../validation/profile');
 

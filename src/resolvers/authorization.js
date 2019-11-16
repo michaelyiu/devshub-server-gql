@@ -1,4 +1,4 @@
-import { ForbiddenError } from "apollo-server-express";
+import { ForbiddenError } from "apollo-server-lambda";
 import { skip } from "graphql-resolvers";
 
 // method to check if logged in
