@@ -38,6 +38,8 @@ const server = new ApolloServer({
 
 //connect mongo db
 const db = require("../config/keys").mongoURI;
+console.log(mongoURI);
+console.log(secret);
 
 mongoose
   .connect(db, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
