@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "babel src/lambda/graphql.js -d dist --ignore node_modules",
     "start": "nodemon --exec babel-node src/lambda/graphql.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:lambda": "netlify-lambda serve src/lambda",
