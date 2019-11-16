@@ -16,6 +16,7 @@
     "apollo-server-express": "^2.9.3",
     "apollo-server-lambda": "^2.9.9",
     "bcryptjs": "^2.4.3",
+    "encoding": "^0.1.12",
     "express": "^4.17.1",
     "graphql": "^14.5.7",
     "graphql-resolvers": "^0.3.3",
