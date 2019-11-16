@@ -36,9 +36,7 @@ const server = new ApolloServer({
   }
 });
 
-//connect mongo dbS
-console.log(config.MONGO_URI);
-console.log(config.SECRET);
+//connect mongo dbs
 const db = config.MONGO_URI;
 
 
