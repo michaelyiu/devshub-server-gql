@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-lambda": "^2.9.9",
+    "apollo-server-lambda": "^2.14.2",
     "bcryptjs": "^2.4.3",
     "encoding": "^0.1.12",
     "express": "^4.17.1",
